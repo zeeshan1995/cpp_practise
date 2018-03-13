@@ -1,0 +1,77 @@
+
+## l value r value
+	1.
+		Roughly speaking, when we use an object as an rvalue,
+		we use the object’s value (its contents). When we use an object as an lvalue, we use
+		the object’s identity (its location in memory)
+	2.
+		rvalue references have the important property that 
+		they may be bound only to an object that
+		is about to be destroyed.
+	3.
+		Variables are lvalues.
+	4.
+		It is essential to realize that the call to move promises that we do not
+		intend to use rr1 again except to assign to it or to destroy it. After a call to move, we
+		cannot make any assumptions about the value of the moved-from object.
+
+		Here, std::move just only does the casting job, but the move constructor may leave the moved-from 
+		object is unusable state.
+
+## type deduction
+	1.
+		f(T & param)
+		f(expr)
+		
+		Deduction rules are:
+		1.	If expr's type is a reference, ignore the reference part.
+		2.	Then pattern-match expr's type against ParamType to determine T.
+
+	2.
+		f(T && param)
+		
+		Deduction rules are:
+		1.	If expr is an lvalue, both T and ParamType are deduced to be lvalue references.
+			That’s doubly unusual. First, it’s the only situation in template type deduction
+			where T is deduced to be a reference. Second, although ParamType is declared
+			using the syntax for an rvalue reference, its deduced type is an lvalue reference.
+
+		2.	If expr is an rvalue, the “normal” (i.e., Case 1) rules apply
+
+	3.
+		f(T expr)
+		
+		Deduction rules:
+		1.	As before, if expr’s type is a reference, ignore the reference part.
+		2.	If, after ignoring expr’s reference-ness, expr is const, ignore that, too. If it’s
+			volatile, also ignore that.
+
+##For array:
+	1.
+		f(T param)
+		converts to pointer
+
+	2.
+		f(T & param)
+
+		Gives actual array, but the information about 
+		number of elements is lost.
+
+	3.
+		f(T (&)[N])
+		Gives actual array type and give the size of array as well.
+
+
+		                              Things to Remember
+									------------------
+	 *	During template type deduction, arguments that are references are treated as
+		non-references, i.e., their reference-ness is ignored.
+	 
+	 *	When deducing types for universal reference parameters, lvalue arguments get 
+		special treatment.
+
+	 *	When deducing types for by-value parameters, const and/or volatile arguments
+		are treated as non-const and non-volatile.
+
+	 *	During template type deduction, arguments that are array or function names
+		decay to pointers, unless they're used to initialize references.
