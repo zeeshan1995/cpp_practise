@@ -1,0 +1,13 @@
+
+
+1.	auto plays the role of T in the template, and
+	the type specifier for the variable acts as ParamType. 
+
+2.	auto type deduction works like template type deduction
+
+3.  difference between auto and template type deduction is that auto
+	assumes that a braced initializer represents a std::initializer_list, but template
+	type deduction doesn’t.
+
+4.	To extend the lifetime of a object use auto &&.
+	Copy elision however does it normally.
